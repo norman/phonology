@@ -8,8 +8,9 @@ module Phonology
 
     # Pulmonic consonants
     PULMONIC = [:nasal, :plosive, :fricative, :approximant, :trill, :flap,
-      :lateral, :bilabial, :labiodental, :dental, :alveolar, :postalveolar,
-      :retroflex, :palatal, :velar, :uvular, :pharyngeal, :epiglottal, :glottal]
+      :lateral_fricative, :lateral_approximant, :lateral_flap, :bilabial,
+      :labiodental, :dental, :alveolar, :postalveolar, :retroflex, :palatal,
+      :velar, :uvular, :pharyngeal, :epiglottal, :glottal]
 
     # Non-pulmonic consonants
     NON_PULMONIC = [:click, :implosive, :ejective]
@@ -43,7 +44,7 @@ module Phonology
       :coronal      => [:dental, :alveolar, :postalveolar, :retroflex].to_set,
       :dorsal       => [:palatal, :velar, :uvular].to_set,
       :radical      => [:pharyngeal, :epiglottal].to_set,
-      :lateral      => [:lateral_fricative, :lateral_approximant, :lateral_flap],
+      :lateral      => [:lateral_fricative, :lateral_approximant, :lateral_flap].to_set,
       :vocalic      => VOCALIC + [:rounded],
       :non_pulmonic => NON_PULMONIC,
       :pulmonic     => PULMONIC,
