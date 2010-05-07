@@ -188,6 +188,13 @@ module Phonology
         end.flatten.to_set
       end
 
+      def place_groups(*args)
+        args = args.first.kind_of?(Set) ? args.shift : args.flatten.to_set
+        [:labial, :coronal, :dorsal, :radical].map do |fclass|
+          fclass unless (CLASSES[fclass] & args).empty?
+        end.compact.uniq
+      end
+
     end
 
   end
