@@ -33,34 +33,34 @@ module Phonology
 
     # Given a set of features, return an array of UTF-8 codepoints.
     def codepoints(features)
-      features = features.to_set.flatten
+      features = features.first.kind_of?(Set) ? features.shift : features.flatten.to_set
       @sets[features] || (raise FeatureError, "No such set #{features.inspect}")
     end
 
     # Return an instance of Sounds whose sets include any of the given
     # features.
     def with(*features)
-      features = features.to_set
+      features = features.first.kind_of?(Set) ? features.shift : features.flatten.to_set
       self.class.new @sets.select {|key, val| !key.intersection(features).empty?}
     end
 
     # Return feature sets that include all of the given features
     def with_all(*features)
-      features = features.to_set
+      features = features.first.kind_of?(Set) ? features.shift : features.flatten.to_set
       self.class.new @sets.select {|key, val| features.subset?(key)}
     end
 
     # Return an instance of Sounds whose sets exclude any of the given
     # features.
     def without(*features)
-      features = features.to_set
+      features = features.first.kind_of?(Set) ? features.shift : features.flatten.to_set
       self.class.new @sets.select {|key, val| !features.subset?(key)}
     end
 
     # Return an instance of Sounds whose sets exclude all of the given
     # features.
     def without_any(*features)
-      features = features.to_set
+      features = features.first.kind_of?(Set) ? features.shift : features.flatten.to_set
       self.class.new @sets.select {|key, val| key.intersection(features).empty?}
     end
 

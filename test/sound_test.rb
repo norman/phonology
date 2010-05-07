@@ -60,6 +60,10 @@ class SoundTest < Test::Unit::TestCase
     assert_equal :alveolar, Sound.new("r").place.first
   end
 
+  test "should indicate if sound is coarticulated" do
+    assert Sound.new("w").coarticulated?
+  end
+
   test "should get manner of articulation" do
     assert_equal :trill, Sound.new("r").manner.first
   end
@@ -72,13 +76,9 @@ class SoundTest < Test::Unit::TestCase
     assert_equal :front, Sound.new("e").backness.first
   end
 
-  test "should indicate if sound exists" do
+  test "should indicate if simple sound exists" do
     assert !Sound.new(:front, :plosive).exists?
     assert Sound.new(:bilabial, :plosive).exists?
-  end
-
-  test "should move sounds backwards" do
-    assert_equal "n", Sound.new("m").backward.backward.symbol
   end
 
 end

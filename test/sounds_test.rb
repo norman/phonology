@@ -29,4 +29,5 @@ class SoundsTest < Test::Unit::TestCase
   test "#without_any should return a set of sets that exclude all of the given features" do
     assert_equal ["d", "t"].to_set, small_set.without_any(:bilabial, :nasal).symbols
   end
+
 end

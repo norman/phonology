@@ -2,9 +2,17 @@ require File.expand_path("../test_helper", __FILE__)
 
 class FeaturesTest < Test::Unit::TestCase
 
-  test "should expand feature groups" do
+  include Phonology
+
+  test "should expand place groups" do
     assert_equal [:dental, :alveolar, :postalveolar, :retroflex, :velar].to_set,
-        Phonology::Features.expand(:coronal, :dental, :velar)
+        Features.expand(:coronal, :dental, :velar)
+  end
+
+  test "should contract place groups" do
+    assert_equal [:coronal], Features.place_groups([:alveolar, :plosive, :postalveolar, :fricative])
+    assert_equal [:coronal], Features.place_groups([:alveolar, :plosive, :postalveolar, :fricative].to_set)
+    assert_equal [:coronal], Features.place_groups(:alveolar, :plosive, :postalveolar, :fricative)
   end
 
 end

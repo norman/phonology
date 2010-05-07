@@ -1,22 +1,13 @@
 module Phonology
 
-  # A set of distinctive features
-  class Sound
-
-    attr_reader :features
-
-    def initialize(*features)
-      @features = if features.first.kind_of?(String)
-        Phonology.features(features.shift)
-      else
-        features.to_set
-      end
-    end
+  module SoundBase
+    attr_accessor :features
+    protected :features=
 
     Features::ALL.each do |feature|
       class_eval(<<-EOM, __FILE__, __LINE__ +1)
         def #{feature}?
-          @features.include? :#{feature}
+          features.include? :#{feature}
         end
       EOM
     end
@@ -25,79 +16,139 @@ module Phonology
       class_eval(<<-EOM, __FILE__, __LINE__ +1)
         def #{feature_class}?
           set = Features.expand(:#{feature_class})
-          !set.intersection(@features).empty?
+          !set.intersection(features).empty?
         end
       EOM
     end
 
-    # Get the IPA symbol for the sound.
+    def codepoints
+      raise NotImplementedError
+    end
+
+    def exists?
+      raise NotImplementedError
+    end
+
+    # Get the IPA codepoints for the sound, including any diacritics.
     def symbol
-      Phonology.symbol(features)
+      codepoints.pack("U*")
+    end
+
+    # Does the sound have more than one place of articulation?
+    def coarticulated?
+      place.size > 1
+    end
+
+    # Get the sound's place of articulation.
+    def place
+      features.intersection(Features::PLACE)
+    end
+
+    # Get the sound's manner of articulation.
+    def manner
+      features.intersection(Features::MANNER)
+    end
+
+    # Get the sound's height.
+    def height
+      features.intersection(Features::HEIGHT)
+    end
+
+    # Get the sound's backness.
+    def backness
+      features.intersection(Features::BACKNESS)
+    end
+
+    # Get the place groups (:coronal, :dorsal, etc). Normally there should only be one.
+    def place_groups
+      Features.place_groups(features)
+    end
+
+  end
+
+  # A set of distinctive features
+  class Sound
+
+    include SoundBase
+
+    # Does the group of features exist in human speech?
+    def self.exists?(features)
+      !! Features::SETS[features]
+    end
+
+    def initialize(*features)
+      if features.first.kind_of?(String)
+        self.features = Phonology.features_for(features.shift).clone
+      else
+        self.features = features.to_set
+      end
+    end
+
+    # Get the IPA codepoints for the sound, excluding any diacritics.
+    def codepoints
+      Phonology.sounds.codepoints(features)
     end
 
     # Add a feature, replacing either the place or manner of articulation,
     # or the height or backness. Returns self.
     def <<(feature)
-      feature = feature.to_sym
-      (@features -= (Features.set(feature) || [])) << feature
-      self
+      features.subtract Features.set(feature).to_a
+      add! feature
     end
     alias add <<
 
+    # Add a feature without replacing place or manner.
+    def add!(feature)
+      features.add feature.to_sym
+      self
+    end
+
     # Remove a feature, and return self.
     def >>(feature)
-      @features -= [feature.to_sym]
+      features.delete feature.to_sym
       self
     end
+    alias delete >>
 
-    # Get the next sound, moving backwards in the mouth.
-    def backward
-      if consonantal?
-        index = Features::PLACE.index(place.first)
-        max = Features::PLACE.length
-        features = @features - Features::PLACE
-        until index > max do
-          index = index + 1
-          feature = Features::PLACE[index]
-          if self.class.exists?(features + [feature])
-            @features = features + [feature]
-            return self
-          end
-        end
-      end
-      self
-    end
-
-    def forward
-    end
-
-    # Get the sound's place of articulation.
-    def place
-      @features.intersection(Features::PLACE)
-    end
-
-    # Get the sound's manner of articulation.
-    def manner
-      @features.intersection(Features::MANNER)
-    end
-
-    # Get the sound's height.
-    def height
-      @features.intersection(Features::HEIGHT)
-    end
-
-    # Get the sound's backness.
-    def backness
-      @features.intersection(Features::BACKNESS)
-    end
-
+    # Does the sound exist?
     def exists?
-      self.class.exists?(@features)
-    end
-
-    def self.exists?(features)
-      !! Features::SETS[features]
+      self.class.exists?(features)
     end
 
   end
+
+
+  # A sound which begins plosive and finished fricative.
+  class Affricate
+
+    include SoundBase
+
+    attr_accessor :onset, :release
+    protected :onset=, :release=
+
+    def initialize(onset, release)
+      self.onset = get_sound(onset)
+      self.release = get_sound(release)
+    end
+
+    def exists?
+      onset.exists? && release.exists?
+    end
+
+    def features
+      onset.features + release.features
+    end
+
+    def codepoints
+      [onset.codepoints, Features::DIACRITICS[:affricate], release.codepoints].flatten
+    end
+
+    private
+
+    def get_sound(arg)
+      arg.kind_of?(Sound) ? arg : Sound.new(*arg)
+    end
+
+  end
+
 end
