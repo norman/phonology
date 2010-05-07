@@ -8,14 +8,14 @@ module Phonology
   extend self
 
   def sounds
-    @sounds ||= Sounds.new Features::SETS
+    @sounds ||= Sounds.new(Features::SETS).freeze
   end
 
-  def symbol(*args)
+  def symbol_for(*args)
     sounds.symbol(*args)
   end
 
-  def features(*args)
+  def features_for(*args)
     sounds.features(*args)
   end
 
