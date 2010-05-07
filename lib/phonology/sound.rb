@@ -1,7 +1,8 @@
 module Phonology
 
   module SoundBase
-    attr_accessor :features
+
+    attr_accessor :features, :orthography
     protected :features=
 
     Features::ALL.each do |feature|
