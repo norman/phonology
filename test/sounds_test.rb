@@ -30,4 +30,16 @@ class SoundsTest < Test::Unit::TestCase
     assert_equal ["d", "t"].to_set, small_set.without_any(:bilabial, :nasal).symbols
   end
 
+  test "should expand features" do
+    assert_equal ["t", "d", "n"].to_set, small_set.with(:coronal).symbols
+  end
+
+  test "#with should exclude negative features" do
+    assert_equal ["t", "d"].to_set, small_set.with(:coronal, :non_nasal).symbols
+  end
+
+  test "#with_all should exclude negative features" do
+    assert_equal ["t"].to_set, small_set.with_all(:alveolar, :unvoiced).symbols
+  end
+
 end

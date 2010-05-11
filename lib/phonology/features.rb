@@ -184,7 +184,8 @@ module Phonology
       # corresponding features. If a single feature is given, just return the
       # feature.
       def expand(*args)
-        args = args.inject([].to_set) do |memo, obj|
+        args = args.first.kind_of?(Set) ? args.shift.to_a : args.flatten
+        args.inject([].to_set) do |memo, obj|
           memo << (CLASSES[obj] || obj)
         end.flatten.to_set
       end

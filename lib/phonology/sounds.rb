@@ -32,36 +32,56 @@ module Phonology
     end
 
     # Given a set of features, return an array of UTF-8 codepoints.
-    def codepoints(features)
-      features = features.first.kind_of?(Set) ? features.shift : features.flatten.to_set
+    def codepoints(*features)
+      features = setify(*features)
       @sets[features] || (raise FeatureError, "No such set #{features.inspect}")
     end
 
     # Return an instance of Sounds whose sets include any of the given
     # features.
     def with(*features)
-      features = features.first.kind_of?(Set) ? features.shift : features.flatten.to_set
-      self.class.new @sets.select {|key, val| !key.intersection(features).empty?}
+      pos, neg = mangle_args(*features)
+      self.class.new(@sets.select do |key, val|
+        !key.intersection(pos).empty?
+      end).without_any(neg)
     end
 
     # Return feature sets that include all of the given features
     def with_all(*features)
-      features = features.first.kind_of?(Set) ? features.shift : features.flatten.to_set
-      self.class.new @sets.select {|key, val| features.subset?(key)}
+      pos, neg = mangle_args(*features)
+      self.class.new(@sets.select do |key, val|
+        pos.subset?(key)
+      end).without_any(neg)
     end
 
     # Return an instance of Sounds whose sets exclude any of the given
     # features.
     def without(*features)
-      features = features.first.kind_of?(Set) ? features.shift : features.flatten.to_set
+      features = setify(*features)
       self.class.new @sets.select {|key, val| !features.subset?(key)}
     end
 
     # Return an instance of Sounds whose sets exclude all of the given
     # features.
     def without_any(*features)
-      features = features.first.kind_of?(Set) ? features.shift : features.flatten.to_set
+      features = setify(*features)
       self.class.new @sets.select {|key, val| key.intersection(features).empty?}
+    end
+
+    private
+
+    def mangle_args(*args)
+      pos = setify(*args)
+      neg = extract_negations(pos)
+      [pos.select {|f| f !~ /\A(non_|un)/}.compact.to_set, neg]
+    end
+
+    def setify(*args)
+      Features.expand(args.first.kind_of?(Set) ? args.shift : args.flatten.to_set)
+    end
+
+    def extract_negations(set)
+      Features.expand(*set.map {|feat| feat =~ /\A(non_|un)([a-z_]*)\z/ && $2.to_sym}.compact)
     end
 
   end
