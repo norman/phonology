@@ -10,6 +10,10 @@ module Phonology
         def #{feature}?
           features.include? :#{feature}
         end
+
+        def non_#{feature}?
+          !#{feature}?
+        end
       EOM
     end
 
@@ -19,8 +23,14 @@ module Phonology
           set = Features.expand(:#{feature_class})
           !set.intersection(features).empty?
         end
+
+        def non_#{feature_class}?
+          !#{feature_class}?
+        end
       EOM
     end
+
+    alias unvoiced? non_voiced?
 
     def orthography
       @orthography ||= ""
