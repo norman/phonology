@@ -2,8 +2,8 @@ module Phonology
 
   module SoundBase
 
-    attr_accessor :features, :orthography
-    protected :features=
+    attr_accessor :features, :orthography, :hints
+    protected :features=, :hints=
 
     Features::ALL.each do |feature|
       class_eval(<<-EOM, __FILE__, __LINE__ +1)
@@ -20,6 +20,10 @@ module Phonology
           !set.intersection(features).empty?
         end
       EOM
+    end
+
+    def orthography
+      @orthography ||= ""
     end
 
     def codepoints
@@ -83,6 +87,17 @@ module Phonology
       else
         self.features = features.to_set
       end
+    end
+
+    # Orthography hints that can be useful to consult when applying rules.
+    def hints
+      @hints ||= []
+    end
+
+    # TODO set up list of valid hints
+    def hint(*args)
+      self.hints += args.flatten
+      self
     end
 
     # Get the IPA codepoints for the sound, excluding any diacritics.
