@@ -35,6 +35,10 @@ module Phonology
       false
     end
 
+    def between(before, after)
+      follows(*before) && precedes(*after)
+    end
+
     def initial?
       @index == 0
     end
