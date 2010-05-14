@@ -1,7 +1,7 @@
 module Phonology
 
   # An inventory of Phonological feature sets.
-  class Sounds
+  class Inventory
 
     # A Hash with a set of features as keys, and UTF-8 codepoints for IPA
     # letters as values.

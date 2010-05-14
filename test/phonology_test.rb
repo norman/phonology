@@ -2,8 +2,8 @@ require File.expand_path("../test_helper", __FILE__)
 
 class PhonologyTest < Test::Unit::TestCase
 
-  test "sounds should return an instance of Sounds" do
-    assert_equal Phonology::Sounds, Phonology.sounds.class
+  test "sounds should return an instance of Inventory" do
+    assert_equal Phonology::Inventory, Phonology.sounds.class
   end
 
   test "should return feature set for symbol" do

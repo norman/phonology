@@ -117,9 +117,12 @@ module Phonology
 
     # Add a feature, replacing either the place or manner of articulation,
     # or the height or backness. Returns self.
-    def <<(feature)
-      features.subtract Features.set(feature).to_a
-      add! feature
+    def <<(*args)
+      args.to_a.flatten.each do |feature|
+        features.subtract Features.set(feature).to_a
+        add! feature
+      end
+      self
     end
     alias add <<
 
@@ -130,8 +133,10 @@ module Phonology
     end
 
     # Remove a feature, and return self.
-    def >>(feature)
-      features.delete feature.to_sym
+    def >>(*args)
+      args.to_a.flatten.each do |feature|
+        features.delete feature.to_sym
+      end
       self
     end
     alias delete >>

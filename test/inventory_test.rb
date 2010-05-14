@@ -7,7 +7,7 @@ class SoundsTest < Test::Unit::TestCase
   end
 
   def small_set
-    Phonology::Sounds.from_ipa("b", "p", "d", "t", "m", "n")
+    Phonology::Inventory.from_ipa("b", "p", "d", "t", "m", "n")
   end
 
   test "should return feature set for symbol" do

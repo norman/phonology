@@ -22,7 +22,7 @@ class RuleTest < Test::Unit::TestCase
     end
   end
 
-  test "should voice" do
+  test "should devoice" do
     assert_rule "bta", "pta" do
       devoice if plosive? and precedes(:plosive, :unvoiced)
     end
@@ -32,8 +32,8 @@ class RuleTest < Test::Unit::TestCase
 
   def assert_rule(given, expected, &block)
     rule = Rule.new &block
-    sounds = given.split('').map {|ipa| Sound.new(ipa)}
-    assert_equal expected, rule.apply(sounds).compact.map(&:symbol).join
+    sounds = SoundSequence.new(given)
+    assert_equal expected, sounds.apply_rule!(rule).to_s
   end
 
 

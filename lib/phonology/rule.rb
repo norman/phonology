@@ -37,11 +37,11 @@ module Phonology
     end
 
     def next_sound(offset = 1)
-      array[@index + offset]
+      !final? && array[@index + offset]
     end
 
     def prev_sound(offset = 1)
-      array[@index - offset]
+      !initial? && array[@index - offset]
     end
 
     def voice
@@ -53,11 +53,13 @@ module Phonology
     end
 
     def precedes(*features)
+      return false if !next_sound
       features.flatten.each {|f| return false unless next_sound.send(:"#{f}?")}
       true
     end
 
     def follows(*features)
+      return false if initial?
       features.flatten.each {|f| return false unless prev_sound.send(:"#{f}?")}
       true
     end
