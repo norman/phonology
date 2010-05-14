@@ -4,6 +4,22 @@ class SoundTest < Test::Unit::TestCase
 
   include Phonology
 
+  test "vowels should be more sonorous than approximants" do
+    assert Sound.new("o").sonority > Sound.new("w").sonority
+  end
+
+  test "approximants should be more sonorous than liquids" do
+    assert Sound.new("j").sonority > Sound.new("l").sonority
+  end
+
+  test "liquids should be more sonorous than nasals" do
+    assert Sound.new("l").sonority > Sound.new("n").sonority
+  end
+
+  test "nasals should be more sonorous than non-nasal consonants" do
+    assert Sound.new("n").sonority > Sound.new("z").sonority
+  end
+
   test "should return an IPA symbol" do
     assert_equal "m", Sound.new(:voiced, :bilabial, :nasal).symbol
   end
