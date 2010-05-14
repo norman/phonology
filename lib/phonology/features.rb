@@ -45,6 +45,7 @@ module Phonology
       :dorsal       => [:palatal, :velar, :uvular].to_set,
       :radical      => [:pharyngeal, :epiglottal].to_set,
       :lateral      => [:lateral_fricative, :lateral_approximant, :lateral_flap].to_set,
+      :liquid       => [:tap, :lateral_fricative, :lateral_approximant, :lateral_flap].to_set,
       :vocalic      => (VOCALIC + [:rounded]).to_set,
       :non_pulmonic => NON_PULMONIC.to_set,
       :pulmonic     => PULMONIC.to_set,
