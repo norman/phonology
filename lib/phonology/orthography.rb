@@ -85,10 +85,10 @@ module Phonology
     def translate(string)
       @string = string
       @max = array.length
-      array.each_index.map do |index|
+      SoundSequence.new(array.each_index.map do |index|
         @index = index
         instance_eval(&@rules)
-      end.flatten.compact
+      end.flatten.compact)
     ensure
       @max = 0
       @string = nil
