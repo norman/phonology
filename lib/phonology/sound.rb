@@ -34,10 +34,11 @@ module Phonology
 
     def sonority
       case
-      when vocalic? then 4
-      when approximant? then 3
-      when liquid? then 2
-      when nasal? then 1
+      when vocalic? then 5
+      when approximant? then 4
+      when liquid? then 3
+      when nasal? then 2
+      when fricative? then 1
       else 0
       end
     end
