@@ -43,6 +43,17 @@ module Phonology
       end
     end
 
+    # Orthography hints that can be useful to consult when applying rules.
+    def hints
+      @hints ||= []
+    end
+
+    # TODO set up list of valid hints
+    def hint(*args)
+      self.hints += args.flatten
+      self
+    end
+
     def orthography
       @orthography ||= ""
     end
@@ -108,17 +119,6 @@ module Phonology
       else
         self.features = features.to_set
       end
-    end
-
-    # Orthography hints that can be useful to consult when applying rules.
-    def hints
-      @hints ||= []
-    end
-
-    # TODO set up list of valid hints
-    def hint(*args)
-      self.hints += args.flatten
-      self
     end
 
     # Get the IPA codepoints for the sound, excluding any diacritics.
