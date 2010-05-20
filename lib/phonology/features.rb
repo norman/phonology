@@ -47,6 +47,7 @@ module Phonology
       :lateral      => [:lateral_fricative, :lateral_approximant, :lateral_flap].to_set,
       :liquid       => [:flap, :lateral_fricative, :lateral_approximant, :lateral_flap].to_set,
       :vocalic      => (VOCALIC + [:rounded]).to_set,
+      :vocoid       => (VOCALIC + [:approximant]).to_set,
       :non_pulmonic => NON_PULMONIC.to_set,
       :pulmonic     => PULMONIC.to_set,
       :consonantal  => CONSONANTAL
