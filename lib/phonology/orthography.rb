@@ -22,7 +22,7 @@ module Phonology
     end
 
     def prev_char(offset = 1)
-      array[@index - offset]
+      array[@index - offset] unless @index == 0
     end
 
     def follows(*chars)
@@ -31,6 +31,7 @@ module Phonology
     end
 
     def precedes(*chars)
+      return false if !next_char
       chars.flatten.each {|c| return true if c == next_char}
       false
     end
