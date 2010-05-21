@@ -5,6 +5,8 @@ require File.expand_path("../phonology/sound", __FILE__)
 require File.expand_path("../phonology/sound_sequence", __FILE__)
 require File.expand_path("../phonology/orthography", __FILE__)
 require File.expand_path("../phonology/rule", __FILE__)
+require File.expand_path("../phonology/syllable", __FILE__)
+require File.expand_path("../phonology/ipa", __FILE__)
 
 module Phonology
 
