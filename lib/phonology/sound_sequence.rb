@@ -9,13 +9,17 @@ module Phonology
       @sounds.__send__(sym, *args, &block)
     end
 
-    def initialize(arg)
+    def initialize(arg = nil)
       # String of ipa symbols
       if arg.kind_of? String
         @sounds = arg.split('').map {|letter| Sound.new(letter)}
       else
         @sounds = arg.to_a
       end
+    end
+
+    def syllables(syllabifier)
+      @syllables ||= syllabifier.syllabify(self)
     end
 
     def symbols
@@ -40,6 +44,8 @@ module Phonology
       self
     end
 
-
+    def sonority
+      @sounds.empty? ? nil : @sounds.last.sonority
+    end
   end
 end

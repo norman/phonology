@@ -64,6 +64,14 @@ module Phonology
       true
     end
 
+    def syllable_initial?
+      syllable.onset.first == curr_sound
+    end
+
+    def syllable_final?
+      syllable.coda.last == curr_sound
+    end
+
     def initial?
       @index == 0
     end

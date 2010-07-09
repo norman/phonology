@@ -2,11 +2,11 @@ module Phonology
 
   module SoundBase
 
-    attr_accessor :features, :orthography, :hints
+    attr_accessor :features, :orthography, :hints, :syllable
     protected :features=, :hints=
 
     Features::ALL.each do |feature|
-      class_eval(<<-EOM, __FILE__, __LINE__ +1)
+      class_eval(<<-EOM, __FILE__, __LINE__ + 1)
         def #{feature}?
           features.include? :#{feature}
         end
@@ -18,7 +18,7 @@ module Phonology
     end
 
     Features::CLASSES.each do |feature_class, values|
-      class_eval(<<-EOM, __FILE__, __LINE__ +1)
+      class_eval(<<-EOM, __FILE__, __LINE__ + 1)
         def #{feature_class}?
           set = Features.expand(:#{feature_class})
           !set.intersection(features).empty?

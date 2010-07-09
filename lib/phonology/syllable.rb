@@ -1,14 +1,13 @@
 module Phonology
-
   # @abstract
   class Syllable
 
     attr_accessor :onset, :coda, :nucleus, :stress
 
     def initialize(sound = nil)
-      @onset = []
-      @nucleus = []
-      @coda = []
+      @onset = ::Phonology::SoundSequence.new
+      @nucleus = ::Phonology::SoundSequence.new
+      @coda = ::Phonology::SoundSequence.new
       add sound if sound
     end
 
@@ -24,8 +23,8 @@ module Phonology
       [nucleus, coda]
     end
 
-    def to_s
-      (stress ? IPA.primary_stress : "") + to_a.map(&:symbol).join
+    def to_s(show_stress = true)
+      (show_stress && stress ? IPA.primary_stress : "") + to_a.map(&:symbol).join
     end
 
     def wants?(sound)
@@ -52,13 +51,12 @@ module Phonology
       else
         @coda << sound
       end
+      sound.syllable = self
     end
     alias add <<
 
     def empty?
       onset.empty? && nucleus.empty? && coda.empty?
     end
-
   end
-
 end
