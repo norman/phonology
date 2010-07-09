@@ -10,16 +10,22 @@ module Phonology
     # Get an instance, building its set from a list IPA characters.
     def self.from_ipa(*chars)
       chars = chars.flatten.map {|char| char.unpack("U*")}
-      new Features::SETS.select {|key, val| chars.include? val}
+      new Hash[Features::SETS.select {|key, val| chars.include? val}]
     end
 
     def initialize(sets)
       @sets = sets
     end
 
-    # Given an IPA symbol, return a corresponding set of distinctive features.
-    def features(symbol)
-      @sets.key(symbol.unpack("U*"))
+    if RUBY_VERSION < "1.9"
+      # Given an IPA symbol, return a corresponding set of distinctive features.
+      def features(symbol)
+        @sets.index(symbol.unpack("U*"))
+      end
+    else
+      def features(symbol)
+        @sets.key(symbol.unpack("U*"))
+      end
     end
 
     # Given a set of features, return an IPA symbol
@@ -41,31 +47,31 @@ module Phonology
     # features.
     def with(*features)
       pos, neg = mangle_args(*features)
-      self.class.new(@sets.select do |key, val|
+      self.class.new(Hash[@sets.select do |key, val|
         !key.intersection(pos).empty?
-      end).without_any(neg)
+      end]).without_any(neg)
     end
 
     # Return feature sets that include all of the given features
     def with_all(*features)
       pos, neg = mangle_args(*features)
-      self.class.new(@sets.select do |key, val|
+      self.class.new(Hash[@sets.select do |key, val|
         pos.subset?(key)
-      end).without_any(neg)
+      end]).without_any(neg)
     end
 
     # Return an instance of Sounds whose sets exclude any of the given
     # features.
     def without(*features)
       features = setify(*features)
-      self.class.new @sets.select {|key, val| !features.subset?(key)}
+      self.class.new Hash[@sets.select {|key, val| !features.subset?(key)}]
     end
 
     # Return an instance of Sounds whose sets exclude all of the given
     # features.
     def without_any(*features)
       features = setify(*features)
-      self.class.new @sets.select {|key, val| key.intersection(features).empty?}
+      self.class.new Hash[@sets.select {|key, val| key.intersection(features).empty?}]
     end
 
     private
@@ -73,7 +79,7 @@ module Phonology
     def mangle_args(*args)
       pos = setify(*args)
       neg = extract_negations(pos)
-      [pos.select {|f| f !~ /\A(non_|un)/}.compact.to_set, neg]
+      [pos.select {|f| f.to_s !~ /\A(non_|un)/}.compact.to_set, neg]
     end
 
     def setify(*args)
@@ -81,7 +87,7 @@ module Phonology
     end
 
     def extract_negations(set)
-      Features.expand(*set.map {|feat| feat =~ /\A(non_|un)([a-z_]*)\z/ && $2.to_sym}.compact)
+      val = Features.expand(*set.map {|feat| feat.to_s =~ /\A(non_|un)([a-z_]*)\z/ && $2.to_sym}.compact)
     end
 
   end

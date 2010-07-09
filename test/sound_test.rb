@@ -1,3 +1,4 @@
+# encoding: utf-8
 require File.expand_path("../test_helper", __FILE__)
 
 class SoundTest < Test::Unit::TestCase
@@ -49,7 +50,7 @@ class SoundTest < Test::Unit::TestCase
   test "should add/remove rounding" do
     sound = Sound.new("a")
     sound << :rounded
-    assert_equal "\u0276", sound.symbol
+    assert_equal "ɶ", sound.symbol
     sound >> :rounded
     assert_equal "a", sound.symbol
   end

@@ -9,6 +9,10 @@ module Phonology
       @sounds.__send__(sym, *args, &block)
     end
 
+    def to_a
+      @sounds
+    end
+
     def initialize(arg = nil)
       # String of ipa symbols
       if arg.kind_of? String
