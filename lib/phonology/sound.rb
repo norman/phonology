@@ -138,8 +138,8 @@ module Phonology
     alias add <<
 
     # Add a feature without replacing place or manner.
-    def add!(feature)
-      features.add feature.to_sym
+    def add!(*args)
+      args.map {|a| features.add a.to_sym }
       self
     end
 
