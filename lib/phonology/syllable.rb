@@ -12,7 +12,7 @@ module Phonology
     end
 
     def to_a
-      [onset.to_a, rime.to_a].flatten
+      [onset.to_a, rime.map(&:to_a)].flatten
     end
 
     def valid?

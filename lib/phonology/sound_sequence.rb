@@ -18,7 +18,7 @@ module Phonology
       if arg.kind_of? String
         @sounds = arg.split('').map {|letter| Sound.new(letter)}
       else
-        @sounds = arg.to_a
+        @sounds = [arg].flatten.compact
       end
     end
 
