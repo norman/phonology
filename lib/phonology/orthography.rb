@@ -8,6 +8,11 @@ module Phonology
       last_sound.__send__(sym, *args, &block)
     end
 
+    def context(before, after)
+      string.downcase[offset - before.length, before.length] == before &&
+      string.downcase[offset + 1, after.length] == after
+    end
+
     def anticipate(&block)
       @anticipation = block
       nil
@@ -34,6 +39,10 @@ module Phonology
       return false if !next_char
       chars.flatten.each {|c| return true if c == next_char}
       false
+    end
+
+    def offset
+      @index
     end
 
     def between(before, after)

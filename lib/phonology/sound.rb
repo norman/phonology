@@ -34,11 +34,11 @@ module Phonology
 
     def sonority
       case
-      when vocalic? then 5
+      when vocalic?     then 5
       when approximant? then 4
-      when liquid? then 3
-      when nasal? then 2
-      when fricative? then 1
+      when liquid?      then 3
+      when nasal?       then 2
+      when fricative?   then 1
       else 0
       end
     end
@@ -160,7 +160,7 @@ module Phonology
   end
 
 
-  # A sound which begins plosive and finished fricative.
+  # A sound which begins plosive and finishes fricative.
   class Affricate
 
     include SoundBase
