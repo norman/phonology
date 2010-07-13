@@ -23,6 +23,18 @@ Rake::RDocTask.new do |rd|
 end
 
 begin
+  require "rcov/rcovtask"
+  Rcov::RcovTask.new do |r|
+    r.test_files = FileList["test/**/*_test.rb"]
+    r.verbose = true
+    r.rcov_opts << "--exclude gems/*"
+  end
+rescue LoadError
+end
+
+
+
+begin
   require 'reek/rake/task'
   Reek::Rake::Task.new do |t|
     t.fail_on_error = false
