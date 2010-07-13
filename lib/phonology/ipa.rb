@@ -4,7 +4,7 @@ module Phonology
     extend self
 
     def primary_stress
-      "\u02c8"
+      "ˈ"
     end
 
   end
